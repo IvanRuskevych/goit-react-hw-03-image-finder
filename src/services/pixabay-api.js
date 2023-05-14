@@ -6,7 +6,7 @@ const BASE_URL = 'https://pixabay.com/api/';
 //   key: KEY_API,
 // });
 
-function fetchImages(text = 'cat') {
+function fetchImages(text = 'dog') {
   return fetch(
     `${BASE_URL}?q=cat&page=1&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12&q=${text}`
   ).then(response => {
