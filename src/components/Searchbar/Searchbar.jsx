@@ -12,17 +12,38 @@ export default class Searchbar extends Component {
     return this.setState({ text: e.target.value });
   };
 
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const text = this.state.text.trim().toLowerCase();
+
+    if (text === '') {
+      return alert('Enter search-text');
+    }
+
+    this.props.onSubmit(text);
+    this.setState({ text: '' });
+  };
+
   render() {
     return (
-      <input
-        className={css.Searchbar}
-        type="text"
-        autoComplete="off"
-        autoFocus
-        placeholder="Search images and photos"
-        value={this.state.text}
-        onChange={this.handleChange}
-      />
+      <header className={css.Searchbar} onSubmit={this.handleSubmit}>
+        <form className={css.SearchForm}>
+          <button type="submit" className={css.SearchFormButton}>
+            <span className={css.SearchFormButtonLabel}>Search</span>
+          </button>
+
+          <input
+            className={css.SearchFormInput}
+            type="text"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+            value={this.state.text}
+            onChange={this.handleChange}
+          />
+        </form>
+      </header>
     );
   }
 }

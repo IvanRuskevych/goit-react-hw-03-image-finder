@@ -4,7 +4,9 @@ import Searchbar from './Searchbar/Searchbar';
 export default class App extends Component {
   state = {
     images: [],
+    text: '',
   };
+
   componentDidMount = () => {
     imagesApi
       .fetchImages()
@@ -12,22 +14,15 @@ export default class App extends Component {
       .catch(err => console.log(err));
   };
 
+  handleSearchText = text => {
+    // console.log(text);
+    return this.setState({ text });
+  };
+
   render() {
     return (
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr',
-          gridGap: 16,
-          paddingBottom: 24,
-
-          backgroundColor: 'blue',
-          color: 'white',
-        }}
-      >
-        {this.state.hits && <div>React homework template</div>}
-
-        <Searchbar />
+      <div>
+        <Searchbar onSubmit={this.handleSearchText} />
       </div>
     );
   }
