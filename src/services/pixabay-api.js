@@ -6,7 +6,7 @@ const BASE_URL = 'https://pixabay.com/api/';
 //   key: KEY_API,
 // });
 
-function fetchImages(text = 'dog') {
+function fetchImages(text = '') {
   return fetch(
     `${BASE_URL}?q=cat&page=1&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12&q=${text}`
   ).then(response => {
@@ -14,7 +14,7 @@ function fetchImages(text = 'dog') {
     if (response.ok) {
       return response.json();
     }
-    return Promise.reject(new Error(`Haven't found any images "${'err'}"`));
+    return Promise.reject(new Error(`Haven't found any images "${text}"`));
   });
 }
 

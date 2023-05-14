@@ -8,13 +8,23 @@ export default class App extends Component {
   state = {
     images: [],
     text: '',
+    status: 'idle',
   };
 
   componentDidMount = () => {
+    if (this.state.text === '') {
+      return this.setState({ status: 'idle' });
+    }
+
     imagesApi
       .fetchImages()
-      .then(response => this.setState({ images: response.hits }))
-      .catch(err => console.log(err));
+      .then(response => {
+        this.setState({ images: response.hits });
+        this.setState({ status: 'resolved' });
+      })
+      .catch(err => {
+        this.setState({ status: 'rejected' });
+      });
   };
 
   handleSearchText = text => {
@@ -23,15 +33,25 @@ export default class App extends Component {
   };
 
   render() {
-    // console.log(this.state.images);
-    return (
-      <div>
-        <Searchbar onSubmit={this.handleSearchText} />
+    const { images, status } = this.state;
 
-        <ImageGallery>
-          <ImageGalleryItem images={this.state.images}></ImageGalleryItem>
-        </ImageGallery>
-      </div>
-    );
+    if (status === 'idle') {
+      return <Searchbar onSubmit={this.handleSearchText} />;
+    }
+
+    if (status === 'resolved') {
+      return (
+        <div>
+          <Searchbar onSubmit={this.handleSearchText} />
+          <ImageGallery>
+            <ImageGalleryItem images={images}></ImageGalleryItem>
+          </ImageGallery>
+        </div>
+      );
+    }
+
+    if (status === 'rejected') {
+      alert(`Error`);
+    }
   }
 }
