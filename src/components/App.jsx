@@ -3,6 +3,7 @@ import imagesApi from '../services/pixabay-api';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
+import Loader from './Loader/Loader';
 
 export default class App extends Component {
   state = {
@@ -19,14 +20,15 @@ export default class App extends Component {
 
   componentDidUpdate = (prevProps, prevState) => {
     if (prevState.query !== this.state.query) {
+      this.setState({ status: 'pending' });
+
       imagesApi
         .fetchImages(this.state.query)
         .then(response => {
-          this.setState({ images: response.hits });
-          this.setState({ status: 'resolved' });
+          this.setState({ images: response.hits, status: 'resolved' });
         })
         .catch(err => {
-          this.setState({ status: 'rejected' });
+          this.setState({ err, status: 'rejected' });
         });
     }
   };
@@ -41,6 +43,10 @@ export default class App extends Component {
 
     if (status === 'idle') {
       return <Searchbar onSubmit={this.handleFormSubmit} />;
+    }
+
+    if (status === 'pending') {
+      return <Loader />;
     }
 
     if (status === 'resolved') {
