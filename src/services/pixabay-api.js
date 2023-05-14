@@ -6,10 +6,9 @@ const BASE_URL = 'https://pixabay.com/api/';
 //   key: KEY_API,
 // });
 
-function fetchImages(text = '') {
-  return fetch(
-    `${BASE_URL}?q=cat&page=1&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12&q=${text}`
-  ).then(response => {
+function fetchImages(text, page = 1) {
+  const url = `${BASE_URL}/?key=${KEY_API}&q=${text}&page=${page}&per_page=12&image_type=photo&orientation=horizontal&safesearch=true`;
+  return fetch(url).then(response => {
     // console.log(response);
     if (response.ok) {
       return response.json();
