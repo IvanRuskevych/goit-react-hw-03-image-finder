@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import imagesApi from '../services/pixabay-api';
+import Searchbar from './Searchbar/Searchbar';
 export default class App extends Component {
   state = {
     images: [],
@@ -25,6 +26,8 @@ export default class App extends Component {
         }}
       >
         {this.state.hits && <div>React homework template</div>}
+
+        <Searchbar />
       </div>
     );
   }
