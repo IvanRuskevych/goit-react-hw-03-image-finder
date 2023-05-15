@@ -5,53 +5,88 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
+import Button from './Button/Button';
 
+const Status = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+  REJECTED: 'rejected',
+};
 export default class App extends Component {
   state = {
     images: [],
     query: '',
-    status: 'idle',
+    status: Status.IDLE,
     imageId: null,
+    page: 1,
+    showButton: false,
   };
 
   componentDidMount = () => {
     if (this.state.query === '') {
-      return this.setState({ status: 'idle' });
+      return this.setState({ status: Status.IDLE });
     }
   };
 
   componentDidUpdate = (prevProps, prevState) => {
-    if (prevState.query !== this.state.query) {
-      this.setState({ status: 'pending' });
+    const prevQuery = prevState.query;
+    const nextQuery = this.state.query;
+
+    const prevPage = prevState.page;
+    const nextPage = this.state.page;
+
+    if (prevQuery !== nextQuery || prevPage !== nextPage) {
+      this.setState({ status: Status.PENDING });
 
       imagesApi
-        .fetchImages(this.state.query)
+        .fetchImages(nextQuery, nextPage)
         .then(response => {
-          this.setState({ images: response.hits, status: 'resolved' });
+          this.setState(prevState => ({
+            images: [...prevState.images, ...response.hits],
+            status: Status.RESOLVED,
+            showButton:
+              this.state.page < Math.ceil(response.total / 12) ? true : false,
+          }));
         })
+        .then(console.log(this.state))
         .catch(err => {
-          this.setState({ err, status: 'rejected' });
+          this.setState({ err, status: Status.REJECTED });
         });
     }
   };
 
   handleFormSubmit = query => {
+    if (query === this.state.query) {
+      return;
+    }
     // console.log('handleFormSubmit', query);
-    return this.setState({ query });
+    return this.setState({
+      query,
+      page: 1,
+      images: [],
+      showButton: false,
+      imageId: null,
+      status: Status.IDLE,
+    });
   };
 
   toggleModal = imageId => {
     this.setState({ imageId });
   };
 
-  render() {
-    const { images, status, imageId } = this.state;
+  handleLoadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
 
-    if (status === 'idle') {
+  render() {
+    const { images, status, imageId, showButton } = this.state;
+
+    if (status === Status.IDLE) {
       return <Searchbar onSubmit={this.handleFormSubmit} />;
     }
 
-    if (status === 'pending') {
+    if (status === Status.PENDING) {
       return (
         <>
           <Searchbar onSubmit={this.handleFormSubmit} />
@@ -60,7 +95,7 @@ export default class App extends Component {
       );
     }
 
-    if (status === 'resolved') {
+    if (status === Status.RESOLVED) {
       return (
         <>
           <div>
@@ -73,6 +108,9 @@ export default class App extends Component {
               ></ImageGalleryItem>
             </ImageGallery>
           </div>
+
+          {showButton && <Button onClick={this.handleLoadMore} />}
+
           {imageId && (
             <Modal
               toggleModal={this.toggleModal}
@@ -83,26 +121,8 @@ export default class App extends Component {
       );
     }
 
-    if (status === 'rejected') {
+    if (status === Status.REJECTED) {
       return alert(`Error`);
     }
   }
 }
-
-//   toggleModal = () => {
-//     this.setState(state => ({
-//       showModal: !state.showModal,
-//     }));
-//   };
-
-//   render() {
-//     return (
-//       <>
-//         <button type="button" onClick={this.toggleModal}>
-//           button
-//         </button>
-//         {this.state.showModal && <Modal />}
-//       </>
-//     );
-//   }
-// }

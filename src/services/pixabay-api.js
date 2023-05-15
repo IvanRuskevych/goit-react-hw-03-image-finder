@@ -6,7 +6,7 @@ const BASE_URL = 'https://pixabay.com/api/';
 //   key: KEY_API,
 // });
 
-function fetchImages(text, page = 1) {
+function fetchImages(text, page) {
   const url = `${BASE_URL}/?key=${KEY_API}&q=${text}&page=${page}&per_page=12&image_type=photo&orientation=horizontal&safesearch=true`;
   return fetch(url).then(response => {
     // console.log(response);
