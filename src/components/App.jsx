@@ -13,6 +13,7 @@ const Status = {
   RESOLVED: 'resolved',
   REJECTED: 'rejected',
 };
+
 export default class App extends Component {
   state = {
     images: [],
@@ -43,7 +44,6 @@ export default class App extends Component {
               this.state.page < Math.ceil(response.total / 12) ? true : false,
           }));
         })
-        .then(console.log(this.state))
         .catch(err => {
           this.setState({ err, status: Status.REJECTED });
         });

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import css from './ImageGalleryItem.module.css';
 
 export default function ImageGalleryItem({ images, toggleModal }) {
@@ -15,3 +16,14 @@ export default function ImageGalleryItem({ images, toggleModal }) {
     );
   });
 }
+
+ImageGalleryItem.propTypes = {
+  toggleModal: PropTypes.func.isRequired,
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
+    })
+  ),
+};
