@@ -23,12 +23,6 @@ export default class App extends Component {
     showButton: false,
   };
 
-  componentDidMount = () => {
-    if (this.state.query === '') {
-      return this.setState({ status: Status.IDLE });
-    }
-  };
-
   componentDidUpdate = (prevProps, prevState) => {
     const prevQuery = prevState.query;
     const nextQuery = this.state.query;
