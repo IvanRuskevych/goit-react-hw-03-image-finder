@@ -16,22 +16,23 @@ export default class Modal extends Component {
 
   handleKeyDownEsc = e => {
     if (e.code === 'Escape') {
-      return this.props.toggleModal();
+      return this.props.toggleModal(null);
     }
   };
 
   handleBackdropClick = e => {
     if (e.target === e.currentTarget) {
-      return this.props.toggleModal();
+      return this.props.toggleModal(null);
     }
   };
 
   render() {
+    const { largeImageURL, tags } = this.props.image;
+    // console.log(this.props.image);
     return createPortal(
       <div className={css.Overlay}>
         <div className={css.Modal}>
-          <h2>MODAL</h2>
-          <img src="" alt="!!!!!!!!!!!" />
+          <img src={largeImageURL} alt={tags} />
         </div>
       </div>,
       modalRef

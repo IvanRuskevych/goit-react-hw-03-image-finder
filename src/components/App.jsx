@@ -40,7 +40,7 @@ export default class App extends Component {
     return this.setState({ query });
   };
 
-  handleImageId = imageId => {
+  toggleModal = imageId => {
     this.setState({ imageId });
   };
 
@@ -52,7 +52,12 @@ export default class App extends Component {
     }
 
     if (status === 'pending') {
-      return <Loader />;
+      return (
+        <>
+          <Searchbar onSubmit={this.handleFormSubmit} />
+          <Loader />;
+        </>
+      );
     }
 
     if (status === 'resolved') {
@@ -60,14 +65,20 @@ export default class App extends Component {
         <>
           <div>
             <Searchbar onSubmit={this.handleFormSubmit} />
+
             <ImageGallery>
               <ImageGalleryItem
                 images={images}
-                handleImageId={this.handleImageId}
+                toggleModal={this.toggleModal}
               ></ImageGalleryItem>
             </ImageGallery>
           </div>
-          {imageId && <Modal />}
+          {imageId && (
+            <Modal
+              toggleModal={this.toggleModal}
+              image={images.find(image => image.id === imageId)}
+            />
+          )}
         </>
       );
     }
