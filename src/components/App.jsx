@@ -13,6 +13,7 @@ const Status = {
   RESOLVED: 'resolved',
   REJECTED: 'rejected',
 };
+
 export default class App extends Component {
   state = {
     images: [],
@@ -21,12 +22,6 @@ export default class App extends Component {
     imageId: null,
     page: 1,
     showButton: false,
-  };
-
-  componentDidMount = () => {
-    if (this.state.query === '') {
-      return this.setState({ status: Status.IDLE });
-    }
   };
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -49,7 +44,6 @@ export default class App extends Component {
               this.state.page < Math.ceil(response.total / 12) ? true : false,
           }));
         })
-        .then(console.log(this.state))
         .catch(err => {
           this.setState({ err, status: Status.REJECTED });
         });
