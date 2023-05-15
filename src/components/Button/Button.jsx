@@ -1,1 +1,11 @@
-console.log('Button');
+import css from './Buton.module.css';
+
+export default function Button({ onClick }) {
+  return (
+    <div className={css.Wrap}>
+      <button className={css.Button} type="button" onClick={onClick}>
+        Load more
+      </button>
+    </div>
+  );
+}
