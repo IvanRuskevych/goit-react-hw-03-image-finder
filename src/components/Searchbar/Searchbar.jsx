@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import css from './Searchbar.module.css';
-
+import { FaSistrix } from 'react-icons/fa';
 export default class Searchbar extends Component {
   state = {
     query: '',
@@ -30,6 +30,7 @@ export default class Searchbar extends Component {
       <header className={css.Searchbar} onSubmit={this.handleSubmit}>
         <form className={css.SearchForm}>
           <button type="submit" className={css.SearchFormButton}>
+            <FaSistrix size={25} />
             <span className={css.SearchFormButtonLabel}>Search</span>
           </button>
 

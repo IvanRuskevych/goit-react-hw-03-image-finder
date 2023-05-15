@@ -22,6 +22,7 @@ export default class App extends Component {
     imageId: null,
     page: 1,
     showButton: false,
+    error: null,
   };
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -44,8 +45,8 @@ export default class App extends Component {
               this.state.page < Math.ceil(response.total / 12) ? true : false,
           }));
         })
-        .catch(err => {
-          this.setState({ err, status: Status.REJECTED });
+        .catch(error => {
+          this.setState({ error, status: Status.REJECTED });
         });
     }
   };
@@ -74,7 +75,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { images, status, imageId, showButton } = this.state;
+    const { images, status, imageId, showButton, error } = this.state;
 
     if (status === Status.IDLE) {
       return <Searchbar onSubmit={this.handleFormSubmit} />;
@@ -116,7 +117,7 @@ export default class App extends Component {
     }
 
     if (status === Status.REJECTED) {
-      return alert(`Error`);
+      return alert(error.message);
     }
   }
 }
